@@ -9,9 +9,9 @@ define(function () {
         'DEBUG' : true,
 
         'API_HOST' : window.location.host,
-        'API_PORT' : 80,
+        'API_PORT' : 8080,
 
-        'WEBSOCKET_HOST' : window.location.host,
+        'WEBSOCKET_HOST' : window.location.hostname,
         'WEBSOCKET_PORT' : 3000,
 
         'UPLOADER_CHUNK_SIZE'            : 1048576, //1MB

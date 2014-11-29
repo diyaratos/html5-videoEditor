@@ -7,7 +7,7 @@ var express = require('express'),
     manager = require('./modules/manager').createManager(),
     encoder = require('./modules/encoder'),
     avisynth = require('./modules/avisynth'),
-    metadata = require('./modules/metadata');
+    metadata = require('./modules/metaData');
 
 
 /**
@@ -381,4 +381,4 @@ io.sockets.on('connection', function (socket) {
 ;
 
 
-app.listen(80);
+app.listen(8080);
