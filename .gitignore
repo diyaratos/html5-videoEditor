@@ -1,6 +1,5 @@
 .idea/*
 .sass-cache/*
-public/projects/*
 node_modules
 stylesheets
 ffmpeg.exe
