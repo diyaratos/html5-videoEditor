@@ -194,7 +194,8 @@ define(["jquery", "backbone", 'underscore', 'utils', 'config', 'hbs!templates/ti
 
                     //create canvas(es)
                     cCanvas = document.createElement('canvas');
-                    cCtx = ctx.push(cCanvas.getContext('2d'));
+                    cCtx = cCanvas.getContext('2d');
+                    ctx.push(cCtx);
 
                     //configure canvas
                     cCanvas.width = Config.GUI_TIMELINE_CANVAS_MAX_WIDTH;
@@ -265,11 +266,11 @@ define(["jquery", "backbone", 'underscore', 'utils', 'config', 'hbs!templates/ti
                     $parent = $target.parent(),
                     id = $parent.attr("data-id"),
                     cmd = $target.attr("data-cmd"),
-                    sequences = this.model.get('sequences'),
-                    sequencesAmount = sequences.length - 1,
+                    sequences = this.model.get('sequences');
+                var sequencesAmount = sequences.length - 1,
                     sequence = sequences.get(id),
                     stack = parseInt(sequence.get('stack'), 10);
-
+               
 
                 switch (cmd) {
 
