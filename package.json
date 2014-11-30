@@ -2,14 +2,16 @@
   "name": "html5-videoEditor",
   "version": "0.0.1",
   "dependencies": {
-    "express": "3.x",
-    "node-uuid": "1.3.x",
-    "wrench": "1.3.x",
-    "buffered-writer": "0.1.x",
-    "mongojs": "0.4.x",
-    "fluent-ffmpeg": "1.2.x",
-    "socket.io": "0.9.x",
-    "underscore": "1.3.x",
-    "node-imagemagick": "0.1.x"
+    "express": "~4.10.4",
+    "node-uuid": "~1.4.1",
+    "wrench": "~1.5.8",
+    "buffered-writer": "~0.2.3",
+    "mongojs": "~0.17.0",
+    "fluent-ffmpeg": "~2.0.0-rc3",
+    "socket.io": "~1.2.1",
+    "underscore": "~1.7.0",
+    "node-imagemagick": "~0.1.8",
+    "body-parser": "~1.9.3",
+    "errorhandler": "~1.3.0"
   }
 }

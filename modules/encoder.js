@@ -1,7 +1,8 @@
 var ffmpeg = require('fluent-ffmpeg'),
     util = require('util'),
     events = require('events'),
-    _ = require('underscore');
+    _ = require('underscore'),
+    path = require('path');
 
 /*
  It's pretty redundant in here, transcode() and encode() could be merged
@@ -48,18 +49,14 @@ var Encoder = function () {
         };
 
         this.encode = function (job) {
-
+            console.log("ENCODE: " + job.avsPath);
             var self = this;
 
-            var proc = new ffmpeg({
-                source  : job.avsPath,
-                timeout : 240 * 60
-            })
-                .withVideoBitrate(500)
-                .withFps(job.fps)
-                .toFormat(job.format)
-                .onProgress(function (progress) {
-
+            ffmpeg(path.normalize(job.avsPath))
+                //.videoBitrate(500)
+                //.fps(job.fps)
+                .format(job.format)
+                .on('progress', function (progress) {
                     self.emit('encoding:progress', {
                         compositionId    : job.compositionId,
                         projectId        : job.projectId,
@@ -67,9 +64,12 @@ var Encoder = function () {
                         isComplete       : false
                     });
                 })
-                //if complete
-                .saveToFile(job.avsPath.replace('.avs', '') + '.mp4', function (stdout, stderr, err) {
-
+                .on('error', function(err) {
+                   console.log('An error occurred: ' + err.message);
+                   self.threads--;
+                })
+                .on('end', function() {
+                    console.log('Processing finished !');
                     self.emit('encoding:progress', {
                         compositionId    : job.compositionId,
                         projectId        : job.projectId,
@@ -84,23 +84,20 @@ var Encoder = function () {
 
                     self.threads--;
                     self.start();
-                }
-            );
+                })
+                .save(job.avsPath.replace('.avs', '') + '.mp4');
         };
 
 
         this.transcode = function (job) {
-
+            console.log("TRANSCODE: " + job.path + job.originalFileName + " with format: " + job.format);
             var self = this;
 
-            var proc = new ffmpeg({
-                source  : job.path + job.originalFileName,
-                timeout : 240 * 60
-            })
-                .withVideoBitrate(1500)
-                .toFormat(job.format)
-                .onProgress(function (progress) {
-
+            ffmpeg(path.normalize(job.path + job.originalFileName))
+                //.videoBitrate(1500)
+                //.format(job.format)
+                .on('progress', function (progress) {
+                    console.log("PROGRESS: " + progress.percent);
                     self.emit('transcoding:progress', {
                         fileId           : job.fileId,
                         projectId        : job.projectId,
@@ -108,10 +105,13 @@ var Encoder = function () {
                         isComplete       : false
                     });
                 })
-                //if complete
-                .saveToFile(job.path + job.fileName, function (stdout, stderr, err) {
-
-                    self.emit('transcoding:progress', {
+                .on('error', function(err) {
+                   console.log('An error occurred: ' + err.message);
+                   self.threads--;
+                })
+                .on('end', function() {
+                   console.log('Processing finished !');
+                   self.emit('transcoding:progress', { 
                         fileId           : job.fileId,
                         projectId        : job.projectId,
                         encodingProgress : 100,
@@ -125,14 +125,13 @@ var Encoder = function () {
 
                     self.threads--;
                     self.start();
-                }
-            );
+                })
+                .save(job.path + job.fileName);
         };
 
         return this;
 
-    }
-    ;
+    };
 
 util.inherits(Encoder, events.EventEmitter);
 

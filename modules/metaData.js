@@ -2,7 +2,7 @@
  * @author Matthieu Holzer
  */
 
-var Metalib = require('fluent-ffmpeg').Metadata,
+var ffmpeg = require('fluent-ffmpeg'),
     imageMagick = require('node-imagemagick');
 
 var MetaData = function () {
@@ -21,9 +21,13 @@ var MetaData = function () {
     };
 
     this.getMetaDataFromVideoFile = function (filePath, callback) {
+        ffmpeg.ffprobe(filePath, function(err, res){
+          if(err) throw err;
+          
+          callback(res);
 
-        var metaObject = new Metalib(filePath);
-        metaObject.get(function onMetaDataRead(metaData, err) {
+        });
+        /*metaObject.get(function onMetaDataRead(metaData, err) {
             if (err) {
                 throw err;
             }
@@ -40,7 +44,7 @@ var MetaData = function () {
             };
 
             callback(res);
-        });
+        });*/
 
     };
 

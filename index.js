@@ -1,7 +1,9 @@
 var express = require('express'),
     app = express(),
+    bodyParser = require('body-parser'),
+    errorhandler = require('errorhandler'),
     server = require('http').createServer(app),
-    io = require('socket.io').listen(3000),
+    io = require('socket.io')(3000),
     events = require('events'),
     fs = require('fs'),
     manager = require('./modules/manager').createManager(),
@@ -13,29 +15,31 @@ var express = require('express'),
 /**
  * EXPRESS CONFIGURATION
  */
-app.use(express.bodyParser());
+//app.use(bodyParser);
+//app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json());
+//app.configure(function () {
+app.use(express.static(__dirname + '/public'));
+app.use(errorhandler({ dumpExceptions : true, showStack : true }));
 
-app.configure(function () {
-    app.use(express.static(__dirname + '/public'));
-    app.use(express.errorHandler({ dumpExceptions : true, showStack : true }));
-
-});
+//});
 
 
 /**
  * SOCKET.IO CONFIGURATION
  */
-io.enable('browser client minification');  // send minified client
-io.enable('browser client etag');          // apply etag caching logic based on version number
-io.enable('browser client gzip');          // gzip the file
-io.set('log level', 1);                    // reduce logging
-io.set('browser client', false);           //does Socket.IO need to serve the static resources
-io.set('transports', [                     // enable all transports (optional if you want flashsocket)
-    'websocket'
-    , 'htmlfile'
-    , 'xhr-polling'
-    , 'jsonp-polling'
-]);
+//io.enable('browser client minification');  // send minified client
+//io.enable('browser client etag');          // apply etag caching logic based on version number
+//io.enable('browser client gzip');          // gzip the file
+//io.set('log level', 1);                    // reduce logging
+//io.set('browser client', false);           //does Socket.IO need to serve the static resources
+/*io.set('transports', [                     // enable all transports (optional if you want flashsocket)
+  'polling', 
+  'websocket'
+]);*/
 
 
 /**
